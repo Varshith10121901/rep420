@@ -170,11 +170,16 @@ LOGIN_HTML = """
             border-radius: 10px;
         }
 
+        .input-container {
+            position: relative;
+            width: 100%;
+            margin: 8px 0;
+        }
+
         input {
             background-color: #2A3B56;
             border: none;
-            padding: 12px 15px;
-            margin: 8px 0;
+            padding: 12px 40px 12px 15px;
             width: 100%;
             border-radius: 5px;
             transition: all 0.3s ease;
@@ -190,6 +195,21 @@ LOGIN_HTML = """
 
         input::placeholder {
             color: #778DA9;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #778DA9;
+            cursor: pointer;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #E0E1DD;
         }
 
         .container {
@@ -316,14 +336,14 @@ LOGIN_HTML = """
             transform: translateX(20%);
         }
 
-        .success-message {
-            color: #4BB543; /* Green for success */
+        .error-message {
+            color: #FF6B6B;
             font-size: 12px;
             margin-top: 5px;
         }
 
-        .error-message {
-            color: #FF6B6B; /* Red for errors */
+        .success-message {
+            color: #4BB543;
             font-size: 12px;
             margin-top: 5px;
         }
@@ -338,9 +358,12 @@ LOGIN_HTML = """
                 <span>use your email for registration</span>
                 <input type="text" id="signupName" name="name" placeholder="Name" required />
                 <input type="email" id="signupEmail" name="email" placeholder="Email" required />
-                <input type="password" id="signupPassword" name="password" placeholder="Password" required />
+                <div class="input-container">
+                    <input type="password" id="signupPassword" name="password" placeholder="Password" required />
+                    <i class="fas fa-eye toggle-password" id="toggleSignupPassword"></i>
+                </div>
                 <button type="submit">Sign Up</button>
-                <div id="signupMessage" class="{{ 'success-message' if signup_message and 'success' in signup_message.lower() else 'error-message' }}">{{ signup_message | default('') }}</div>
+                <div id="signupMessage" class="success-message">{{ signup_message | default('') }}</div>
             </form>
         </div>
         <div class="form-container sign-in-container">
@@ -348,9 +371,13 @@ LOGIN_HTML = """
                 <h1>Sign in</h1>
                 <span>use your account</span>
                 <input type="email" id="signinEmail" name="email" placeholder="Email" required />
-                <input type="password" id="signinPassword" name="password" placeholder="Password" required />
+                <div class="input-container">
+                    <input type="password" id="signinPassword" name="password" placeholder="Password" required />
+                    <i class="fas fa-eye toggle-password" id="toggleSigninPassword"></i>
+                </div>
+                <a href="#">Forgot your password?</a>
                 <button type="submit">Sign In</button>
-                <div id="signinMessage" class="{{ 'success-message' if signin_message and 'success' in signin_message.lower() else 'error-message' }}">{{ signin_message | default('') }}</div>
+                <div id="signinMessage" class="success-message">{{ signin_message | default('') }}</div>
             </form>
         </div>
         <div class="overlay-container">
@@ -383,13 +410,25 @@ LOGIN_HTML = """
             container.classList.remove("right-panel-active");
         });
 
-        // Check if there's a signup success message and switch to sign-in panel
-        const signupMessage = document.getElementById('signupMessage').textContent.toLowerCase();
-        if (signupMessage.includes('success')) {
-            setTimeout(() => {
-                container.classList.remove("right-panel-active");
-            }, 1000); // Delay to allow user to see the success message
-        }
+        // Password visibility toggle
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const signupPassword = document.getElementById('signupPassword');
+        const toggleSigninPassword = document.getElementById('toggleSigninPassword');
+        const signinPassword = document.getElementById('signinPassword');
+
+        toggleSignupPassword.addEventListener('click', () => {
+            const type = signupPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupPassword.setAttribute('type', type);
+            toggleSignupPassword.classList.toggle('fa-eye');
+            toggleSignupPassword.classList.toggle('fa-eye-slash');
+        });
+
+        toggleSigninPassword.addEventListener('click', () => {
+            const type = signinPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signinPassword.setAttribute('type', type);
+            toggleSigninPassword.classList.toggle('fa-eye');
+            toggleSigninPassword.classList.toggle('fa-eye-slash');
+        });
     </script>
 </body>
 </html>
@@ -1969,6 +2008,8 @@ footer {
     margin: 20px 0;
 }
 
+
+
 .wave-bar {
     background: var(--primary-color);
     height: 100%;
@@ -2387,7 +2428,7 @@ function initializeDocumentAnalyzer() {
         });
     }
 }
-                    
+
 function initializeAudioAnalyzer() {
     const startBtn = document.getElementById('startBtn');
     const stopBtn = document.getElementById('stopBtn');
