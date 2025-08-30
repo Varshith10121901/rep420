@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Johnson - Creative Developer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/barba.js/1.0.0/barba.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .barba-container {
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(64, 224, 208, 0.4);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 0;
+            backdrop-filter: blur(20px);
+            background: rgba(15, 15, 35, 0.8);
+            border-bottom: 1px solid rgba(64, 224, 208, 0.2);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #40e0d0);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Main Content */
+        main {
+            padding-top: 100px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .profile-image {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #0f1419, #1a1a2e, #16213e);
+            border: 4px solid rgba(64, 224, 208, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            color: #40e0d0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .image-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(64, 224, 208, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-image:hover .image-placeholder::before {
+            opacity: 1;
+        }
+
+        .profile-image:hover .image-placeholder {
+            transform: scale(1.05);
+            border-color: rgba(64, 224, 208, 0.6);
+            box-shadow: 0 0 30px rgba(64, 224, 208, 0.3);
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 24px;
+            height: 24px;
+            background: #00ff88;
+            border-radius: 50%;
+            border: 4px solid #0f0f23;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+        }
+
+        .profile-info h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff, #00d4ff, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+
+        .job-title {
+            font-size: 1.5rem;
+            color: #40e0d0;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .bio {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #40e0d0;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .contact-info {
+            margin-bottom: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+        }
+
+        .contact-item i {
+            color: #40e0d0;
+            width: 20px;
+            text-align: center;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-button.primary {
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid #40e0d0;
+            color: #40e0d0;
+            box-shadow: none;
+        }
+
+        .cta-button.secondary:hover {
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            color: white;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Social Media Section */
+        .social-section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 3rem;
+            font-weight: 700;
+        }
+
+        .social-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .social-card {
+            background: rgba(15, 15, 35, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(64, 224, 208, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-card:hover::before {
+            opacity: 1;
+        }
+
+        .social-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 212, 255, 0.2);
+        }
+
+        .social-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .instagram { color: #E4405F; }
+        .twitter { color: #1DA1F2; }
+        .linkedin { color: #0077B5; }
+        .github { color: #40e0d0; }
+        .youtube { color: #FF0000; }
+        .dribbble { color: #EA4C89; }
+
+        .social-card:hover .social-icon {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .social-card h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .social-card p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .followers {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .follow-btn {
+            padding: 0.5rem 1.5rem;
+            background: linear-gradient(135deg, rgba(64, 224, 208, 0.2), rgba(0, 212, 255, 0.1));
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .follow-btn:hover {
+            background: linear-gradient(135deg, rgba(64, 224, 208, 0.3), rgba(0, 212, 255, 0.2));
+            transform: scale(1.05);
+        }
+
+        /* Projects Section */
+        .projects-section {
+            margin: 4rem 0;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .project-card {
+            background: rgba(15, 15, 35, 0.6);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 212, 255, 0.2);
+        }
+
+        .project-image {
+            height: 200px;
+            background: linear-gradient(135deg, #0f1419, #1a1a2e, #16213e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #40e0d0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(64, 224, 208, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .project-card:hover .project-image::before {
+            left: 100%;
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-content h3 {
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .project-content p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(64, 224, 208, 0.2);
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #40e0d0;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            margin: 4rem 0;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 2rem;
+        }
+
+        .contact-form-section h3,
+        .contact-details-section h3 {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(15, 15, 35, 0.6);
+            border: 1px solid rgba(64, 224, 208, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #40e0d0;
+            box-shadow: 0 0 20px rgba(64, 224, 208, 0.2);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #40e0d0;
+        }
+
+        .form-group textarea + i {
+            top: 1rem;
+            transform: none;
+        }
+
+        .submit-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(64, 224, 208, 0.3);
+        }
+
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .detail-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .detail-content h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .detail-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 0.3rem;
+        }
+
+        .quick-contact {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(64, 224, 208, 0.2);
+        }
+
+        .quick-contact h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .quick-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .quick-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(64, 224, 208, 0.1);
+            border: 1px solid rgba(64, 224, 208, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #40e0d0;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .quick-link:hover {
+            background: linear-gradient(135deg, #00d4ff, #40e0d0);
+            color: white;
+            transform: translateY(-3px);
+        }
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: rgba(255, 255, 255, 0.8);
+            margin-top: 4rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .social-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            main {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(64, 224, 208, 0.3);
+            border-top: 3px solid #40e0d0;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="bg-animation"></div>
+    <div class="particles"></div>
+
+    <div id="barba-wrapper">
+        <div class="barba-container" data-namespace="home">
+            <header>
+                <nav>
+                    <a href="#" class="logo">AJ</a>
+                    <ul class="nav-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#projects">Projects</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </header>
+
+            <main>
+                <section class="hero">
+                    <div class="profile-container">
+                        <div class="profile-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="status-indicator"></div>
+                        </div>
+                        <div class="profile-info">
+                            <h1>Alex Johnson</h1>
+                            <h2 class="job-title">Full Stack Developer & UI/UX Designer</h2>
+                            <p class="bio">Passionate about creating beautiful, functional web experiences. 5+ years of experience in modern web technologies and design.</p>
+                            
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <span class="stat-number">150+</span>
+                                    <span class="stat-label">Projects</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">50+</span>
+                                    <span class="stat-label">Clients</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-number">5+</span>
+                                    <span class="stat-label">Years</span>
+                                </div>
+                            </div>
+
+                            <div class="contact-info">
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>alex.johnson@email.com</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>+1 (555) 123-4567</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>San Francisco, CA</span>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <a href="#contact" class="cta-button primary">Hire Me</a>
+                                <a href="#" class="cta-button secondary">Download CV</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="social-section">
+                    <h2 class="section-title">Connect With Me</h2>
+                    <div class="social-grid">
+                        <div class="social-card">
+                            <div class="social-icon instagram">
+                                <i class="fab fa-instagram"></i>
+                            </div>
+                            <h3>Instagram</h3>
+                            <p>@alexjohnson_dev - Daily inspiration and behind-the-scenes content from my creative journey.</p>
+                            <div class="followers">
+                                <span>45.2K followers</span>
+                                <a href="https://instagram.com/alexjohnson_dev" target="_blank" class="follow-btn">Follow</a>
+                            </div>
+                        </div>
+
+                        <div class="social-card">
+                            <div class="social-icon twitter">
+                                <i class="fab fa-twitter"></i>
+                            </div>
+                            <h3>Twitter</h3>
+                            <p>@alexjdev - Thoughts on design, development, and the latest tech trends.</p>
+                            <div class="followers">
+                                <span>12.8K followers</span>
+                                <a href="https://twitter.com/alexjdev" target="_blank" class="follow-btn">Follow</a>
+                            </div>
+                        </div>
+
+                        <div class="social-card">
+                            <div class="social-icon linkedin">
+                                <i class="fab fa-linkedin"></i>
+                            </div>
+                            <h3>LinkedIn</h3>
+                            <p>Alex Johnson - Professional updates and industry insights in web development.</p>
+                            <div class="followers">
+                                <span>8.5K connections</span>
+                                <a href="https://linkedin.com/in/alexjohnsondev" target="_blank" class="follow-btn">Connect</a>
+                            </div>
+                        </div>
+
+                        <div class="social-card">
+                            <div class="social-icon github">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <h3>GitHub</h3>
+                            <p>@alexjohnson-dev - Open source projects and code repositories for the community.</p>
+                            <div class="followers">
+                                <span>2.3K stars</span>
+                                <a href="https://github.com/alexjohnson-dev" target="_blank" class="follow-btn">Follow</a>
+                            </div>
+                        </div>
+
+                        <div class="social-card">
+                            <div class="social-icon youtube">
+                                <i class="fab fa-youtube"></i>
+                            </div>
+                            <h3>YouTube</h3>
+                            <p>Alex Johnson Dev - Tutorial videos and creative process documentation.</p>
+                            <div class="followers">
+                                <span>28.7K subscribers</span>
+                                <a href="https://youtube.com/@alexjohnsondev" target="_blank" class="follow-btn">Subscribe</a>
+                            </div>
+                        </div>
+
+                        <div class="social-card">
+                            <div class="social-icon dribbble">
+                                <i class="fab fa-dribbble"></i>
+                            </div>
+                            <h3>Dribbble</h3>
+                            <p>@alexjohnson - Design shots and creative experiments in UI/UX design.</p>
+                            <div class="followers">
+                                <span>15.4K followers</span>
+                                <a href="https://dribbble.com/alexjohnson" target="_blank" class="follow-btn">Follow</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="projects-section">
+                    <h2 class="section-title">Featured Projects</h2>
+                    <div class="projects-grid">
+                        <div class="project-card">
+                            <div class="project-image">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="project-content">
+                                <h3>Mobile App Design</h3>
+                                <p>A sleek fitness tracking app with intuitive UI and smooth animations.</p>
+                                <div class="project-tags">
+                                    <span class="tag">UI/UX</span>
+                                    <span class="tag">React Native</span>
+                                    <span class="tag">Design</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-image">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="project-content">
+                                <h3>Web Platform</h3>
+                                <p>E-commerce platform with modern design and seamless user experience.</p>
+                                <div class="project-tags">
+                                    <span class="tag">React</span>
+                                    <span class="tag">Node.js</span>
+                                    <span class="tag">MongoDB</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="project-card">
+                            <div class="project-image">
+                                <i class="fas fa-paint-brush"></i>
+                            </div>
+                            <div class="project-content">
+                                <h3>Brand Identity</h3>
+                                <p>Complete brand redesign for a tech startup including logo and guidelines.</p>
+                                <div class="project-tags">
+                                    <span class="tag">Branding</span>
+                                    <span class="tag">Illustrator</span>
+                                    <span class="tag">Creative</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="contact-section">
+                    <h2 class="section-title">Get In Touch</h2>
+                    <div class="contact-container">
+                        <div class="contact-form-section">
+                            <h3>Send Me a Message</h3>
+                            <form class="contact-form">
+                                <div class="form-group">
+                                    <input type="text" placeholder="Your Name" required>
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" placeholder="Your Email" required>
+                                    <i class="fas fa-envelope"></i>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" placeholder="Subject" required>
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <div class="form-group">
+                                    <textarea placeholder="Your Message" rows="5" required></textarea>
+                                    <i class="fas fa-comment"></i>
+                                </div>
+                                <button type="submit" class="submit-btn">
+                                    <i class="fas fa-paper-plane"></i>
+                                    Send Message
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="contact-details-section">
+                            <h3>Contact Information</h3>
+                            <div class="contact-details">
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <h4>Email</h4>
+                                        <p>alex.johnson@email.com</p>
+                                        <p>work@alexjohnson.dev</p>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <h4>Phone</h4>
+                                        <p>+1 (555) 123-4567</p>
+                                        <p>+1 (555) 987-6543</p>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <h4>Location</h4>
+                                        <p>San Francisco, CA</p>
+                                        <p>Available for remote work</p>
+                                    </div>
+                                </div>
+
+                                <div class="detail-item">
+                                    <div class="detail-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="detail-content">
+                                        <h4>Working Hours</h4>
+                                        <p>Mon - Fri: 9:00 AM - 6:00 PM</p>
+                                        <p>Weekend: Available for urgent projects</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="quick-contact">
+                                <h4>Quick Contact</h4>
+                                <div class="quick-links">
+                                    <a href="mailto:alex.johnson@email.com" class="quick-link">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                    <a href="tel:+15551234567" class="quick-link">
+                                        <i class="fas fa-phone"></i>
+                                    </a>
+                                    <a href="https://wa.me/15551234567" class="quick-link">
+                                        <i class="fab fa-whatsapp"></i>
+                                    </a>
+                                    <a href="https://t.me/alexjohnsondev" class="quick-link">
+                                        <i class="fab fa-telegram"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            <footer>
+                <p>&copy; 2024 Alex Johnson. Crafted with passion and creativity.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Initialize GSAP animations
+        function initAnimations() {
+            // Hero animation
+            gsap.from('.hero h1', {
+                duration: 1.5,
+                y: 100,
+                opacity: 0,
+                ease: 'power3.out',
+                delay: 0.5
+            });
+
+            gsap.from('.hero p', {
+                duration: 1.2,
+                y: 50,
+                opacity: 0,
+                ease: 'power3.out',
+                delay: 0.8
+            });
+
+            gsap.from('.cta-button', {
+                duration: 1,
+                y: 30,
+                opacity: 0,
+                ease: 'power3.out',
+                delay: 1.1
+            });
+
+            // Social cards animation
+            gsap.from('.social-card', {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                stagger: 0.1,
+                ease: 'power3.out',
+                delay: 1.5
+            });
+
+            // Project cards animation
+            gsap.from('.project-card', {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                stagger: 0.15,
+                ease: 'power3.out',
+                delay: 2
+            });
+        }
+
+        // Barba.js page transitions
+        Barba.Pjax.start();
+
+        Barba.Dispatcher.on('newPageReady', function(currentStatus, oldStatus, container) {
+            // Reinitialize animations for new page
+            initAnimations();
+        });
+
+        // Page transition animations
+        Barba.Dispatcher.on('linkClicked', function() {
+            gsap.to('.barba-container', {
+                duration: 0.5,
+                opacity: 0,
+                y: 50,
+                ease: 'power2.inOut'
+            });
+        });
+
+        Barba.Dispatcher.on('newPageReady', function() {
+            gsap.from('.barba-container', {
+                duration: 0.8,
+                opacity: 0,
+                y: 50,
+                ease: 'power2.out'
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(15, 15, 35, 0.9)';
+                header.style.backdropFilter = 'blur(30px)';
+            } else {
+                header.style.background = 'rgba(15, 15, 35, 0.8)';
+                header.style.backdropFilter = 'blur(20px)';
+            }
+        });
+
+        // Loading screen
+        window.addEventListener('load', () => {
+            const loading = document.querySelector('.loading');
+            setTimeout(() => {
+                loading.classList.add('fade-out');
+                initAnimations();
+                createParticles();
+            }, 1000);
+        });
+
+        // Social card click effects
+        document.querySelectorAll('.social-card').forEach(card => {
+            card.addEventListener('click', function() {
+                gsap.to(this, {
+                    duration: 0.1,
+                    scale: 0.95,
+                    ease: 'power2.inOut',
+                    yoyo: true,
+                    repeat: 1
+                });
+            });
+        });
+
+        // Project card hover effects
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                gsap.to(this.querySelector('.project-image'), {
+                    duration: 0.3,
+                    scale: 1.1,
+                    ease: 'power2.out'
+                });
+            });
+
+            card.addEventListener('mouseleave', function() {
+                gsap.to(this.querySelector('.project-image'), {
+                    duration: 0.3,
+                    scale: 1,
+                    ease: 'power2.out'
+                });
+            });
+        });
+
+        // Parallax effect for background
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+            document.querySelector('.bg-animation').style.transform = `translateY(${rate}px)`;
+        });
+    </script>
+</body>
+</html>
